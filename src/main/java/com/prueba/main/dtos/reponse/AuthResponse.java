@@ -1,2 +1,15 @@
-package com.prueba.main.dtos.reponse;public class AuthResponse {
+package com.prueba.main.dtos.reponse;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class AuthResponse {
+    private String token;
+
+    public AuthResponse(String token) {
+        this.token = token;
+    }
+
 }

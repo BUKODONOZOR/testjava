@@ -1,4 +1,4 @@
-package com.prueba.main.dtos.reponse;
+package com.prueba.main.dtos.request;
 
 import lombok.Getter;
 import lombok.Setter;

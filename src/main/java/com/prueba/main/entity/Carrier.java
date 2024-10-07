@@ -1,5 +1,6 @@
 package com.prueba.main.entity;
 
+import com.prueba.main.util.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -12,9 +13,15 @@ import java.util.List;
 @NoArgsConstructor
 public class Carrier extends Audit {
 
-
     @NotNull
     private String name;
+
+    @NotNull
+    private String username;
+
+    @NotNull
+    private String password;
+
 
     @ManyToMany
     @JoinTable(
@@ -23,5 +30,9 @@ public class Carrier extends Audit {
             inverseJoinColumns = @JoinColumn(name = "pallet_id")
     )
     private List<Pallet> pallets;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Role role;
 
 }
