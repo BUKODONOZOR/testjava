@@ -1,4 +1,4 @@
-package com.main.simulacro.config;
+package com.prueba.main.config;
 
 
 import org.springdoc.core.models.GroupedOpenApi;
@@ -11,7 +11,7 @@ public class OpenAPIConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("simulacro-api")
+                .group("prueba-api")
                 .pathsToMatch("/**")
                 .build();
     }
