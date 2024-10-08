@@ -42,12 +42,11 @@ public class CarrierService implements UserDetailsService { // Implementa UserDe
 
 
     public Carrier createUser(Carrier carrierCreateDTO) {
-        // Crear un nuevo usuario y establecer sus atributos
         Carrier carrier = new Carrier();
         carrier.setName(carrierCreateDTO.getName());
         carrier.setUsername(carrierCreateDTO.getUsername());
         carrier.setPassword(carrierCreateDTO.getPassword());
-        carrier.setRole(carrierCreateDTO.getRole()); // Establecer el rol desde el DTO
+        carrier.setRole(carrierCreateDTO.getRole());
 
 
         // Validar si el usuario ya existe
@@ -67,7 +66,6 @@ public class CarrierService implements UserDetailsService { // Implementa UserDe
         // Encriptar la contraseña
         carrier.setPassword(passwordEncoder.encode(carrier.getPassword()));
 
-        // Intentar guardar el usuario en la base de datos
         try {
             return carrierRepository.save(carrier);
         } catch (ConstraintViolationException e) {
@@ -88,7 +86,7 @@ public class CarrierService implements UserDetailsService { // Implementa UserDe
         }
     }
 
-    // Implementación del método loadUserByUsername de UserDetailsService
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Carrier carrier = carrierRepository.findByUsername(username)
@@ -99,12 +97,12 @@ public class CarrierService implements UserDetailsService { // Implementa UserDe
                 carrier.getId(),
                 carrier.getUsername(),
                 carrier.getPassword(),
-                carrier.getRole(), // Usar el rol del usuario
-                getAuthorities(carrier) // Obtener las autoridades
+                carrier.getRole(),
+                getAuthorities(carrier)
         );
     }
-    // Método para obtener las autoridades del usuario
+
     private Collection<? extends GrantedAuthority> getAuthorities(Carrier user) {
-        return List.of(new SimpleGrantedAuthority(user.getRole().name())); // Asumiendo que role es un enum
+        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
     }
 }

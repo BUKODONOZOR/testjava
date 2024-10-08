@@ -26,10 +26,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest -> authRequest
-                        .requestMatchers("/api/auth/register", "/api/auth/login","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/pallets/create").authenticated() // Asegúrate de que solo usuarios autenticados puedan crear tareas
+                        .requestMatchers("/api/auth/register", "/api/auth/login","/api/charges","/api/pallets","/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html" ,"/api/audit/report").permitAll()
+                        .requestMatchers("/api/pallets/create").authenticated()
                         .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Agregar el filtro
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

@@ -1,2 +1,4 @@
-package com.prueba.main.dtos.request;public class PalletCreateDTO {
+package com.prueba.main.dtos.request;
+
+public class PalletCreateDTO {
 }

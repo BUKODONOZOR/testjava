@@ -33,21 +33,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String jwt = authorizationHeader.substring(7); // Extraer el token
+            String jwt = authorizationHeader.substring(7);
 
             if (jwtTokenProvider.validateToken(jwt)) {
                 String username = jwtTokenProvider.getUsernameFromJWT(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 String role = jwtTokenProvider.getRoleFromJWT(jwt);
 
-                // Verifica si el rol es ADMIN
                 if (role.equals(Role.ADMIN.name())) {
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
-                    // Aquí puedes lanzar una excepción o manejar el acceso denegado
+
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "No tienes permiso para acceder a este recurso");
                     return;
                 }
