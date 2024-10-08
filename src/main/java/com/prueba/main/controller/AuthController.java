@@ -1,6 +1,5 @@
 package com.prueba.main.controller;
 
-
 import com.prueba.main.dtos.reponse.AuthResponse;
 import com.prueba.main.dtos.reponse.CarrierResponseDTO;
 import com.prueba.main.dtos.request.AuthRequest;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-
     @Autowired
     private CarrierService carrierService;
 
@@ -37,32 +35,30 @@ public class AuthController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-
-    @Operation(summary = "Create new user", description = "this enpoint create a new user in database")
+    @Operation(summary = "Create new user", description = "This endpoint creates a new user in the database")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping("/register")
     public ResponseEntity<CarrierResponseDTO> registerUser(@RequestBody CarrierCreateDTO carrierCreateDTO) {
-        // Crear un nuevo usuario
+        // Create a new user
         Carrier carrier = new Carrier();
         carrier.setName(carrierCreateDTO.getName());
         carrier.setUsername(carrierCreateDTO.getUsername());
         carrier.setPassword(carrierCreateDTO.getPassword());
 
-
-        // Asignar el rol desde el DTO
+        // Assign the role from the DTO
         if (carrierCreateDTO.getRole() == null) {
-            carrier.setRole(Role.OPERATOR); // Asignar rol USER por defecto si no se especifica
+            carrier.setRole(Role.OPERATOR); // Assign default USER role if not specified
         } else {
             carrier.setRole(carrierCreateDTO.getRole());
         }
 
-        // Crear el usuario a través del servicio
+        // Create the user through the service
         Carrier createdCarrier = carrierService.createUser(carrier);
 
-        // Construir la respuesta
+        // Build the response
         CarrierResponseDTO responseCarrierDTO = new CarrierResponseDTO();
         responseCarrierDTO.setId(createdCarrier.getId());
         responseCarrierDTO.setName(createdCarrier.getName());
@@ -71,7 +67,7 @@ public class AuthController {
         return ResponseEntity.ok(responseCarrierDTO);
     }
 
-    @Operation(summary = "Login", description = "This enpoint is in charge of authenticating the start of the section in the api")
+    @Operation(summary = "Login", description = "This endpoint handles user authentication for logging into the API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
@@ -79,23 +75,19 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
         try {
-            // Autenticación
+            // Authentication
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(),authRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-            // Generar el token JWT
+            // Generate the JWT token
             String token = jwtTokenProvider.generateToken(userDetails.getUsername(), ((CustomUserDetails) userDetails).getRole());
 
-            // Retornar el token en la respuesta
-            return ResponseEntity.ok((AuthResponse) new AuthResponse(token));
+            // Return the token in the response
+            return ResponseEntity.ok(new AuthResponse(token));
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body((AuthResponse) new AuthResponse("Credenciales incorrectas"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Incorrect credentials"));
         }
     }
-
-
-
-
 }
